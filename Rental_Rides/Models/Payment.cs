@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.Text.Json.Serialization;
 
 namespace Rental_Rides.Models
 {
@@ -23,7 +25,8 @@ namespace Rental_Rides.Models
         [StringLength(20)]
         public string Payment_Status { get; set; }
 
-
+        [ValidateNever]
+        [JsonIgnore]
         public virtual Rented_Car Rented_Car { get; set; }
     }
 }

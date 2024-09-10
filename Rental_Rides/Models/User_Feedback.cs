@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.Text.Json.Serialization;
 
 namespace Rental_Rides.Models
 {
@@ -25,7 +27,11 @@ namespace Rental_Rides.Models
         public int? Feedback_Point { get; set; }
 
         // Navigation Properties
+        [ValidateNever]
+        [JsonIgnore]
         public virtual Car_Details Car_Details { get; set; }
+        [ValidateNever]
+        [JsonIgnore]
         public virtual Customers Customer { get; set; }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.Text.Json.Serialization;
 
 namespace Rental_Rides.Models
 { 
@@ -38,11 +40,21 @@ public class Rented_Car
 
     public int Status { get; set; }
 
-    // Navigation Properties
-    public virtual Car_Details Car_Details { get; set; }
-    public virtual Customers Customer { get; set; }
-    public virtual ICollection<Order> Orders { get; set; } = new HashSet<Order>();
-    public virtual ICollection<Payment> Payments { get; set; } = new HashSet<Payment>();
-    public virtual ICollection<Returned_Car> Returned_Car { get; set; } = new HashSet<Returned_Car>();
+        // Navigation Properties
+        [ValidateNever]
+        [JsonIgnore]
+        public virtual Car_Details Car_Details { get; set; }
+        [ValidateNever]
+        [JsonIgnore]
+        public virtual Customers Customer { get; set; }
+        [ValidateNever]
+        [JsonIgnore]
+        public virtual ICollection<Order> Orders { get; set; } = new HashSet<Order>();
+        [ValidateNever]
+        [JsonIgnore]
+        public virtual ICollection<Payment> Payments { get; set; } = new HashSet<Payment>();
+        [ValidateNever]
+        [JsonIgnore]
+        public virtual ICollection<Returned_Car> Returned_Car { get; set; } = new HashSet<Returned_Car>();
 }
 }

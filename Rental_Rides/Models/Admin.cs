@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace Rental_Rides.Models
 {
@@ -18,6 +19,7 @@ namespace Rental_Rides.Models
         [Required]
         [EmailAddress]
         [StringLength(25)]
+        
         public string Admin_Email { get; set; }
 
         [Phone]
