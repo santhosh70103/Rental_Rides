@@ -20,6 +20,7 @@ namespace Rental_Rides.Models
         [Column(TypeName = "decimal(10,2)")]
         public decimal Refund_Price { get; set; }
 
+        [Range(0, 1)]
         public int Refund_Status { get; set; }
 
         // Navigation Property

@@ -1,6 +1,8 @@
 
 using Microsoft.EntityFrameworkCore;
+using Rental_Rides.IRepo;
 using Rental_Rides.Models;
+using Rental_Rides.Services;
 
 namespace Rental_Rides
 {
@@ -18,6 +20,7 @@ namespace Rental_Rides
                 options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
             });
 
+            builder.Services.AddScoped<IBookingService, BookingService>();
 
             builder.Services.AddControllers()
            .AddJsonOptions(options =>
@@ -30,6 +33,7 @@ namespace Rental_Rides
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddDbContext<CarRentalDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DbCon")));
+            builder.Services.AddScoped<IReturnService, ReturnService>();
 
             var app = builder.Build();
 

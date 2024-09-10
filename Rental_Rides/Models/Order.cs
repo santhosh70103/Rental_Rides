@@ -22,6 +22,9 @@ namespace Rental_Rides.Models
         [Range(1, 4)]
         public int? Order_Status { get; set; }
 
+        [Column(TypeName = "decimal(10,2)")]
+        public decimal? Total_Price { get; set; }
+
         // Navigation Property
         [ValidateNever]
         [JsonIgnore]

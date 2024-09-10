@@ -38,6 +38,7 @@ public class Rented_Car
 
     public int? Days_of_Rent { get; set; }
 
+    [Range(1,5)]
     public int Status { get; set; }
 
         // Navigation Properties

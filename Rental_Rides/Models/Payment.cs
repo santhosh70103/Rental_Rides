@@ -22,7 +22,7 @@ namespace Rental_Rides.Models
         [Column(TypeName = "decimal(10,2)")]
         public decimal? Total_Amount { get; set; }
 
-        [StringLength(20)]
+        [Range(0,1)]
         public string Payment_Status { get; set; }
 
         [ValidateNever]
