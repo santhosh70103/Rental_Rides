@@ -41,10 +41,13 @@ namespace Rent_Rides.Controllers
                 {
                     return StatusCode(500, "customer Not Found");
                 }
+                else if(isBooked==4)
+                {
+                    return StatusCode(500, "car has to be picked up within 3 days");
+                }
                 else
                 {
-                    return StatusCode(500,"3");
-
+                    return StatusCode(500, "3");
 
                 }
             }

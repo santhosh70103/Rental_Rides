@@ -5,5 +5,6 @@ namespace Rental_Rides.IRepo
     public interface IRentalService
     {
         Task<RentalDetailsDTO> GetRentalDetailsByRentalIdAsync(int orderId);
+        Task<int> RentCarAsync(string email);
     }
 }

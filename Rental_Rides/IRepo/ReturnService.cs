@@ -33,7 +33,7 @@ namespace Rental_Rides.Services
             {
                 return false; // Car not found
             }
-
+            
             // Calculate penalty if actual return date is later than expected return date
             decimal penaltyAmount = 0;
             if (actualReturnDate > rentedCar.Expected_Return_Date)
