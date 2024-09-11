@@ -27,15 +27,25 @@ namespace Rent_Rides.Controllers
 
             try
             {
-                bool isBooked = await _bookingService.BookCarAsync(bookingRequest.Customer_Id,bookingRequest.Car_Id,bookingRequest.Days_Of_Rental);
+                int isBooked = await _bookingService.BookCarAsync(bookingRequest.Car_Id, bookingRequest.Customer_Id,bookingRequest.Days_Of_Rental,bookingRequest.date);
 
-                if (isBooked)
+                if (isBooked==100)
                 {
                     return Ok("Car booked successfully.");
                 }
+                else if(isBooked==1)
+                {
+                    return StatusCode(500, "More Than 2 Orders are reserved"); 
+                }
+                else if(isBooked==2)
+                {
+                    return StatusCode(500, "customer Not Found");
+                }
                 else
                 {
-                    return StatusCode(500, "An error occurred while processing your request."); 
+                    return StatusCode(500,"3");
+
+
                 }
             }
             catch (Exception ex)

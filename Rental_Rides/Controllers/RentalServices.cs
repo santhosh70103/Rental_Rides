@@ -7,11 +7,11 @@ namespace Rental_Rides.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RentalByOrder : ControllerBase
+    public class RentalServices : ControllerBase
     {
         private readonly IRentalService _rentalService;
 
-        public RentalByOrder(IRentalService rentalService)
+        public RentalServices(IRentalService rentalService)
         {
             _rentalService = rentalService;
         }

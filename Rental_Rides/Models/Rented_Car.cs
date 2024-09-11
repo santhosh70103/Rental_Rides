@@ -21,7 +21,7 @@ public class Rented_Car
     public int? Customer_ID { get; set; }
 
     [Column(TypeName = "date")]
-    public DateTime? Rented_Date { get; set; }
+    public DateTime? PickUp_Date { get; set; }
 
     [Column(TypeName = "date")]
     public DateTime? Expected_Return_Date { get; set; }

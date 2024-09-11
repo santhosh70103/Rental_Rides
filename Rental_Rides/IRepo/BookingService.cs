@@ -12,14 +12,26 @@ namespace Rental_Rides.IRepo
             _context = context;
         }
 
-        public async Task<bool> BookCarAsync(int customerId, int carId, int rentalDays)
+        public async Task<int> BookCarAsync(int carId, int customerId, int rentalDays, DateTime date)
         {
+
+            var customerIsExist = await _context.Customers.FirstOrDefaultAsync(c => c.Customer_Id == customerId);
+            var count = await _context.Rented_Cars.Where(r => r.Customer_ID == customerId && r.Status==1).CountAsync();
+
+            if(count>2)
+            {
+                return 1;
+            }
+            if (customerIsExist == null)
+            {
+                return 2;
+            }
             // Check if the car is available
             var car = await _context.Car_Details.FirstOrDefaultAsync(c => c.Car_Id == carId && c.Available_Cars > 0);
 
             if (car == null)
             {
-                return false; // Car is not available
+                return 3; // Car is not available
             }
 
             // Create the rental entry
@@ -27,8 +39,8 @@ namespace Rental_Rides.IRepo
             {
                 Customer_ID = customerId,
                 Car_Id = carId,
-                Rented_Date = DateTime.UtcNow,
-                Expected_Return_Date = DateTime.UtcNow.AddDays(rentalDays),
+                PickUp_Date = date,
+                Expected_Return_Date = date.AddDays(rentalDays),
                 Total_Price = rentalDays * car.Rental_Price_PerDay,
                 Penalty_PerDay = car.Penalty_Amt,
                 Payment_Status="Pending",
@@ -70,7 +82,7 @@ namespace Rental_Rides.IRepo
             _context.Car_Details.Update(car);
             await _context.SaveChangesAsync();
                 
-            return true;
+            return 100;
         }
 
 

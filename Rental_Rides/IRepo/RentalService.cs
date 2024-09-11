@@ -28,7 +28,7 @@ namespace Rental_Rides.Services
                                        select new RentalDetailsDTO
                                        {
                                            Rental_ID = Order.Rental_Id,
-                                           Rent_Start_Date =Rented_Car.Rented_Date,
+                                           Rent_Start_Date =Rented_Car.PickUp_Date,
                                            Rent_End_Date = Rented_Car.Expected_Return_Date,
                                            Car_Name = Rented_Car.Car_Details.Car_Name, // Assuming Car_Details has a navigation property
                                            Penalty = Returned_Car.Penalty,

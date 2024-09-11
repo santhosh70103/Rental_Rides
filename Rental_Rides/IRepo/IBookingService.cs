@@ -4,7 +4,7 @@ namespace Rental_Rides.IRepo
 {
     public interface IBookingService
     {
-        Task<bool> BookCarAsync(int customerId, int carId, int rentalDays);
+        Task<int> BookCarAsync(int customerId, int carId, int rentalDays,DateTime date);
         Task<bool> CancelOrderAsync(int orderId);
 
     }
