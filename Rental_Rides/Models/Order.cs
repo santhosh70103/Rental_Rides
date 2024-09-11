@@ -16,6 +16,10 @@ namespace Rental_Rides.Models
         [ForeignKey("Rented_Car")]
         public int? Rental_Id { get; set; }
 
+        [ForeignKey("Customers")]  
+        public int? Customer_ID { get; set; }
+
+
         [ForeignKey("Car_Details")]
         public int? Car_Id { get; set; }
 
@@ -29,5 +33,8 @@ namespace Rental_Rides.Models
         [ValidateNever]
         [JsonIgnore]
         public virtual Rented_Car Rented_Car { get; set; }
+        [ValidateNever]
+        [JsonIgnore]
+        public virtual Customers Customers { get; set; }  
     }
 }

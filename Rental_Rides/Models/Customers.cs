@@ -37,6 +37,9 @@ namespace Rental_Rides.Models
         [ValidateNever]
         [JsonIgnore]
         public virtual ICollection<Rented_Car> Rented_Car { get; private set; } = new HashSet<Rented_Car>();
+        [ValidateNever]
+        [JsonIgnore]
+        public virtual ICollection<Order> Orders { get; set; } = new HashSet<Order>();
     }
 }
 

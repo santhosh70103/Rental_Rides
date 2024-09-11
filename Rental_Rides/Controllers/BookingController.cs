@@ -43,5 +43,20 @@ namespace Rent_Rides.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
+        [HttpPost("Cancel/{orderId}")]
+        public async Task<IActionResult> CancelOrder(int orderId)
+        {
+            var result = await _bookingService.CancelOrderAsync(orderId);
+
+            if (result)
+            {
+                return Ok("Order cancelled successfully.");
+            }
+            else
+            {
+                return NotFound("Order not found or could not be cancelled.");
+            }
+        }
     }
 }

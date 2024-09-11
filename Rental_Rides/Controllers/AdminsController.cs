@@ -56,7 +56,7 @@ namespace Rental_Rides.Controllers
 
             if (existingAdmin != null)
             {
-                // Return a conflict status code (409) if the email already exists
+                
                 return Conflict(new { message = "An admin with this email already exists." });
             }
             _context.Entry(admin).State = EntityState.Modified;

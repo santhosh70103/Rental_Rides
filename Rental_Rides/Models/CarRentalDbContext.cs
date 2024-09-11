@@ -34,6 +34,11 @@ namespace Rental_Rides.Models
                 .WithMany(r => r.Orders)
                 .HasForeignKey(o => o.Rental_Id);
 
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.Customers)
+                .WithMany(c => c.Orders)
+                .HasForeignKey(o => o.Customer_ID);
+                
 
             modelBuilder.Entity<Payment>()
                 .HasOne(p => p.Rented_Car)

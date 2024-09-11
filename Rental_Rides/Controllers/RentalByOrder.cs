@@ -17,10 +17,10 @@ namespace Rental_Rides.Controllers
         }
 
         // GET: api/Rental/5
-        [HttpGet("{rentalId}")]
-        public async Task<ActionResult<RentalDetailsDTO>> GetRentalDetails(int rentalId)
+        [HttpGet("{OrderID}")]
+        public async Task<ActionResult<RentalDetailsDTO>> GetRentalDetails(int OrderID)
         {
-            var rentalDetails = await _rentalService.GetRentalDetailsByRentalIdAsync(rentalId);
+            var rentalDetails = await _rentalService.GetRentalDetailsByRentalIdAsync(OrderID);
 
             if (rentalDetails == null)
             {

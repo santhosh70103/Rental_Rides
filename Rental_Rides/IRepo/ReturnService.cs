@@ -39,7 +39,7 @@ namespace Rental_Rides.Services
             if (actualReturnDate > rentedCar.Expected_Return_Date)
             {
                 var daysLate = (actualReturnDate - rentedCar.Expected_Return_Date.Value).Days;
-                penaltyAmount = daysLate * (rentedCar.Penalty_PerDay ?? 0);
+                penaltyAmount = daysLate * (rentedCar.Penalty_PerDay?? 0);
             }
 
 
@@ -85,8 +85,10 @@ namespace Rental_Rides.Services
 
             _context.Returned_Cars.Add(returnedCar);
 
-            
+            var CarDetails= await _context.Car_Details.FirstOrDefaultAsync(c => c.Car_Id == rentedCar.Car_Id );
 
+            CarDetails.Available_Cars+=1;
+            
             try
             {
                 await _context.SaveChangesAsync();

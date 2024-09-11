@@ -17,13 +17,14 @@ namespace Rental_Rides.Services
             _context = context;
         }
 
-        public async Task<RentalDetailsDTO> GetRentalDetailsByRentalIdAsync(int rentalId)
+        public async Task<RentalDetailsDTO> GetRentalDetailsByRentalIdAsync(int orderId)
         {
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Order_Id == orderId);
             var rentalDetails = await (from Order in _context.Orders
                                        join Rented_Car in _context.Rented_Cars on Order.Rental_Id equals Rented_Car.Rental_Id
                                        join Returned_Car in _context.Returned_Cars on Rented_Car.Rental_Id equals Returned_Car.Rental_Id into returnedCarGroup
                                        from Returned_Car in returnedCarGroup.DefaultIfEmpty() // Left join to handle non-returned cars
-                                       where Order.Rental_Id == rentalId
+                                       where Order.Rental_Id == order.Rental_Id
                                        select new RentalDetailsDTO
                                        {
                                            Rental_ID = Order.Rental_Id,

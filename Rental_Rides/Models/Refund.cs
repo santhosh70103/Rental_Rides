@@ -15,13 +15,13 @@ namespace Rental_Rides.Models
 
 
         [ForeignKey("Rented_Car")]
-        public int Rental_Id { get; set; }
+        public int? Rental_Id { get; set; }
 
         [Column(TypeName = "decimal(10,2)")]
-        public decimal Refund_Price { get; set; }
+        public decimal? Refund_Price { get; set; }
 
         [Range(0, 1)]
-        public int Refund_Status { get; set; }
+        public int? Refund_Status { get; set; }
 
         // Navigation Property
         [ValidateNever]

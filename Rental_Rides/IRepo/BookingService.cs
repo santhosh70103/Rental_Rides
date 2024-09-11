@@ -46,6 +46,7 @@ namespace Rental_Rides.IRepo
                 Car_Id = carId,
                 Order_Status = 1,//pending
                 Total_Price = rentedCar.Total_Price,
+                Customer_ID=rentedCar.Customer_ID
                 // Assuming 1 is for "active"
             };
 
@@ -57,7 +58,7 @@ namespace Rental_Rides.IRepo
             {
                 Rental_Id = rentedCar.Rental_Id,
                 Total_Amount = rentedCar.Total_Price,
-                Payment_Type="Card",
+                Payment_Type="Normal",
                 Payment_Status="1"
             };
 
@@ -69,6 +70,69 @@ namespace Rental_Rides.IRepo
             _context.Car_Details.Update(car);
             await _context.SaveChangesAsync();
                 
+            return true;
+        }
+
+
+        public async Task<bool> CancelOrderAsync(int orderId)
+        {
+            var order = await _context.Orders
+                .Include(o => o.Rented_Car)
+                .FirstOrDefaultAsync(o => o.Order_Id == orderId);
+
+            if (order == null || order.Order_Status==4 || order.Order_Status==3)
+            {
+                return false; // Order not found
+            }
+
+            var rentedCar = await _context.Rented_Cars.FirstOrDefaultAsync(rc=> order.Rental_Id == rc.Rental_Id);
+
+            if (rentedCar == null)
+            {
+                return false; // Rented car not found
+            }
+
+            // Update Rented_Car status to 4 (Cancelled)
+            rentedCar.Status=5;
+            order.Order_Status=5;
+            _context.Rented_Cars.Update(rentedCar);
+
+            var Car = await _context.Car_Details.FirstOrDefaultAsync(c => c.Car_Id == rentedCar.Car_Id);
+            Car.Available_Cars++;
+
+            // Check if payment was successful
+            var payment = await _context.Payments
+                .FirstOrDefaultAsync(p => p.Rental_Id == order.Rental_Id && p.Payment_Status=="1");
+
+            if (payment != null)
+            {
+                var refund = new Refund  //creatin reffund datata
+                {
+                    Rental_Id=order.Rental_Id,
+                    Refund_Price=rentedCar.Total_Price,
+                    Refund_Status=0
+                     
+                };
+
+                await _context.Refunds.AddAsync(refund);
+                await _context.SaveChangesAsync();
+
+                // Update the payment status to refunded
+                var NewPayment = new Payment
+                {
+                    Rental_Id=order.Rental_Id,
+                    Payment_Type="Refund",
+                    Total_Amount=order.Total_Price,
+                    Payment_Status="1"
+
+                };
+                _context.Payments.Update(NewPayment);
+                await _context.SaveChangesAsync();
+            }
+
+            // Save all changes
+            await _context.SaveChangesAsync();
+
             return true;
         }
     }
