@@ -20,14 +20,26 @@ namespace Rental_Rides.Controllers
         public async Task<IActionResult> ReturnCar(string email)
         {
             
-            var result = await _returnService.ReturnCarAsync(email, DateTime.Now);
+            int result = await _returnService.ReturnCarAsync(email, DateTime.Now);
 
-            if (!result)
+            if (result==100)
             {
-                return NotFound(); // Or appropriate error response
+                return StatusCode(200,"Car Returned Successfully"); // Or appropriate error response
+            }
+            else if(result==1)
+            {
+                return NotFound("Customer Not Found");
+            }
+            else if(result==2)
+            {
+                return NotFound("Order Not Found");
+            }
+            else
+            {
+                return StatusCode(500, "Internal Exception");
             }
 
-            return NoContent();
+            
         }
     }
 }

@@ -2,7 +2,7 @@
 {
     public interface IReturnService
     {
-        Task<bool> ReturnCarAsync(string email, DateTime actualReturnDate);
+        Task<int> ReturnCarAsync(string email, DateTime actualReturnDate);
         
     }
 }

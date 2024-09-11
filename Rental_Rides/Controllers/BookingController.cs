@@ -62,15 +62,18 @@ namespace Rent_Rides.Controllers
         [HttpPost("Cancel/{orderId}")]
         public async Task<IActionResult> CancelOrder(int orderId)
         {
-            var result = await _bookingService.CancelOrderAsync(orderId);
-
-            if (result)
+            int result = await _bookingService.CancelOrderAsync(orderId);
+            if(result==100)
             {
-                return Ok("Order cancelled successfully.");
+                return StatusCode(200, "Order SuccesFull");
             }
-            else
+            if (result==1)
             {
                 return NotFound("Order not found or could not be cancelled.");
+            }
+            else 
+            {
+                return NotFound("Rented details not found");
             }
         }
     }

@@ -91,7 +91,7 @@ namespace Rental_Rides.IRepo
         }
 
 
-        public async Task<bool> CancelOrderAsync(int orderId)
+        public async Task<int> CancelOrderAsync(int orderId)
         {
             var order = await _context.Orders
                 .Include(o => o.Rented_Car)
@@ -99,14 +99,14 @@ namespace Rental_Rides.IRepo
 
             if (order == null || order.Order_Status==4 || order.Order_Status==3)
             {
-                return false; // Order not found
+                return 1; // Order not found
             }
 
             var rentedCar = await _context.Rented_Cars.FirstOrDefaultAsync(rc=> order.Rental_Id == rc.Rental_Id);
 
             if (rentedCar == null)
             {
-                return false; // Rented car not found
+                return 2; // Rented car not found
             }
 
             // Update Rented_Car status to 4 (Cancelled)
@@ -150,7 +150,7 @@ namespace Rental_Rides.IRepo
             // Save all changes
             await _context.SaveChangesAsync();
 
-            return true;
+            return 100;
         }
     }
 }

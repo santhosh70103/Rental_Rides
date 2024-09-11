@@ -23,14 +23,14 @@ namespace Rental_Rides.Services
             var rentalDetails = await (from Order in _context.Orders
                                        join Rented_Car in _context.Rented_Cars on Order.Rental_Id equals Rented_Car.Rental_Id
                                        join Returned_Car in _context.Returned_Cars on Rented_Car.Rental_Id equals Returned_Car.Rental_Id into returnedCarGroup
-                                       from Returned_Car in returnedCarGroup.DefaultIfEmpty() // Left join to handle non-returned cars
+                                       from Returned_Car in returnedCarGroup.DefaultIfEmpty() 
                                        where Order.Rental_Id == order.Rental_Id
                                        select new RentalDetailsDTO
                                        {
                                            Rental_ID = Order.Rental_Id,
                                            Rent_Start_Date =Rented_Car.PickUp_Date,
                                            Rent_End_Date = Rented_Car.Expected_Return_Date,
-                                           Car_Name = Rented_Car.Car_Details.Car_Name, // Assuming Car_Details has a navigation property
+                                           Car_Name = Rented_Car.Car_Details.Car_Name, 
                                            Penalty = Returned_Car.Penalty,
                                            Return_Date = Returned_Car.Actual_Return_Date,
                                            Status = Rented_Car.Status
@@ -52,10 +52,10 @@ namespace Rental_Rides.Services
 
             if (customer == null)
             {
-                return 1; // Customer not found
+                return 1; // Customer isnot found
             }
 
-            // Fetch orders for the customer with status = 1 (pending)
+            // Fetch the orders for the customer with status = 1 reserved
             var orders = await _context.Orders
                 .Where(o => o.Customer_ID == customer.Customer_Id && o.Order_Status == 1)
                 .ToListAsync();

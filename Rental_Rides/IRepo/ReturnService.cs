@@ -17,7 +17,7 @@ namespace Rental_Rides.Services
             _context = context;
         }
 
-        public async Task<bool> ReturnCarAsync(string email, DateTime actualReturnDate)
+        public async Task<int> ReturnCarAsync(string email, DateTime actualReturnDate)
         {
             var customer = await _context.Customers.FirstOrDefaultAsync(c => c.Customer_Email == email);
 
@@ -26,15 +26,15 @@ namespace Rental_Rides.Services
 
             if (customer == null)
             {
-                return false;
+                return 1;
             }
             if (order == null)
             {
-                return false;
+                return 2;
             }
             if (rentedCar == null  )
             {
-                return false;
+                return 3;
             }
 
             // Calculate penalty if actual return date is later than expected return date
@@ -97,10 +97,10 @@ namespace Rental_Rides.Services
             catch (Exception ex)
             {
                 // Handle exception (e.g., log error, return status code)
-                return false;
+                return 4;
             }
 
-            return true;
+            return 100;
         }
     }
 }
