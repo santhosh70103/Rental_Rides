@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Rental_Rides.Models;
 
 namespace Rental_Rides.Controllers
@@ -14,10 +18,12 @@ namespace Rental_Rides.Controllers
     public class CustomersController : ControllerBase
     {
         private readonly CarRentalDbContext _context;
+        private readonly IConfiguration _config;
 
-        public CustomersController(CarRentalDbContext context)
+        public CustomersController(CarRentalDbContext context, IConfiguration config)
         {
             _context = context;
+            _config = config;
         }
 
         // GET: api/Customers
@@ -120,6 +126,47 @@ namespace Rental_Rides.Controllers
         private bool CustomersExists(int id)
         {
             return _context.Customers.Any(e => e.Customer_Id == id);
+        }
+
+        [HttpPost]
+        [Route("CustomerLogin")]
+        public async Task<IActionResult> LoginValidation(string Customer_Mail, string Password)
+        {
+            var Customer = await _context.Customers.FirstOrDefaultAsync(c => c.Customer_Email == Customer_Mail);
+            if (Customer == null)
+            {
+                return NotFound("Customer Not Found");
+            }
+            if (Password != Customer.Customer_Password)
+            {
+                return BadRequest("Password Wrong");
+            }
+            string Token = GenerateJwtToken(Customer, Customer.Role);
+            return StatusCode(200, "Login Successfull" + " " + Token);
+        }
+
+        private string GenerateJwtToken(Customers user, string Role)
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSection:Key"]));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier,user.Customer_Id.ToString()),
+                new Claim(ClaimTypes.Email,user.Customer_Email),
+                new Claim(ClaimTypes.Name,user.Customer_Name),
+                new Claim(ClaimTypes.Role, Role)
+            };
+
+
+
+            var jwtToken = new JwtSecurityToken(
+                issuer: _config["JwtSection:Issuer"],
+                audience: _config["JwtSection:Audience"],
+                claims: claims,
+                expires: DateTime.Now.AddHours(1),
+                signingCredentials: credentials
+             );
+            return new JwtSecurityTokenHandler().WriteToken(jwtToken);
         }
     }
 }

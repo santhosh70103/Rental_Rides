@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.Text.Json.Serialization;
+using System.ComponentModel;
 
 namespace Rental_Rides.Models
 {
@@ -11,7 +12,6 @@ namespace Rental_Rides.Models
     {
 
         [Key]
-
         public int Customer_Id { get; set; }
 
 
@@ -29,6 +29,10 @@ namespace Rental_Rides.Models
         [Required]
         [StringLength(25)]
         public string Customer_Password { get; set; }
+
+        [DefaultValue("Customer")]
+        [StringLength(10)]
+        public string Role { get; set; } = "Customer";
 
         // Navigation properties
         [ValidateNever]

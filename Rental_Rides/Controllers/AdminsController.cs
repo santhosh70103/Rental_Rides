@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Rental_Rides.Models;
 
 namespace Rental_Rides.Controllers
@@ -14,6 +18,7 @@ namespace Rental_Rides.Controllers
     public class AdminsController : ControllerBase
     {
         private readonly CarRentalDbContext _context;
+        private readonly IConfiguration _config;
 
         public AdminsController(CarRentalDbContext context)
         {
@@ -118,6 +123,47 @@ namespace Rental_Rides.Controllers
         private bool AdminExists(int id)
         {
             return _context.Admins.Any(e => e.Admin_ID == id);
+        }
+
+        [HttpPost]
+        [Route("AdminLogin")]
+        public async Task<IActionResult> LoginValidation(string Admin_Mail, string Password)
+        {
+            var Admin = await _context.Admins.FirstOrDefaultAsync(a => a.Admin_Email == Admin_Mail);
+            if (Admin == null)
+            {
+                return NotFound("Customer Not Found");
+            }
+            if (Password != Admin.Admin_Password)
+            {
+                return BadRequest("Password Wrong");
+            }
+            string Token = GenerateJwtToken(Admin, Admin.Role);
+            return StatusCode(200, "Login Successfull" + " " + Token);
+        }
+
+        private string GenerateJwtToken(Admin user, string Role)
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSection:Key"]));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier,user.Admin_ID.ToString()),
+                new Claim(ClaimTypes.Email,user.Admin_Email),
+                new Claim(ClaimTypes.Name,user.Admin_Name),
+                new Claim(ClaimTypes.Role, Role)
+            };
+
+
+
+            var jwtToken = new JwtSecurityToken(
+                issuer: _config["JwtSection:Issuer"],
+                audience: _config["JwtSection:Audience"],
+                claims: claims,
+                expires: DateTime.Now.AddHours(1),
+                signingCredentials: credentials
+             );
+            return new JwtSecurityTokenHandler().WriteToken(jwtToken);
         }
     }
 }

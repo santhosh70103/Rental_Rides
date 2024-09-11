@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Rental_Rides.DTO_Models;
 using Rental_Rides.IRepo; // Ensure this namespace is correct
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ namespace Rent_Rides.Controllers
         }
 
         // POST api/booking
+        
         [HttpPost]
         public async Task<IActionResult> BookCar([FromBody] BookingRequestDto bookingRequest)
         {

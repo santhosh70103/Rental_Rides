@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 
 namespace Rental_Rides.Models
 {
@@ -9,7 +10,6 @@ namespace Rental_Rides.Models
     public class Admin
     {
         [Key]
-
         public int Admin_ID { get; set; }
 
         [Required]
@@ -29,6 +29,10 @@ namespace Rental_Rides.Models
         [Required]
         [StringLength(10)]
         public string Admin_Password { get; set; }
+
+        [DefaultValue("Admin")]
+        [StringLength(10)]
+        public string Role { get; set; } = "Admin";
     }
 }
 

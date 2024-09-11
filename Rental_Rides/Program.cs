@@ -1,8 +1,11 @@
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Rental_Rides.IRepo;
 using Rental_Rides.Models;
 using Rental_Rides.Services;
+using System.Text;
 
 namespace Rental_Rides
 {
@@ -39,6 +42,39 @@ namespace Rental_Rides
             builder.Services.AddScoped<IRentalService, RentalService>();
             builder.Services.AddScoped<IOrderService, OrderService>();
 
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.SaveToken = false;
+                options.RequireHttpsMetadata = false;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    //ValidIssuer = builder.Configuration["JwtSection:Issuer"],
+                    //ValidAudience = builder.Configuration["JwtSection:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSection:Key"]!))
+                };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = ctx =>
+                    {
+                        ctx.Request.Cookies.TryGetValue("AuthToken", out var accessToken);
+                        if (!string.IsNullOrEmpty(accessToken)) ctx.Token = accessToken;
+                        return Task.CompletedTask;
+                    }
+                };
+            });
+
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -50,8 +86,11 @@ namespace Rental_Rides
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
+
             app.UseAuthorization();
 
+            
 
             app.MapControllers();
 
