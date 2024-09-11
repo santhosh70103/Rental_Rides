@@ -37,6 +37,7 @@ namespace Rental_Rides
             builder.Services.AddScoped<IReturnService, ReturnService>();
             builder.Services.AddScoped<ICarService, CarService>();
             builder.Services.AddScoped<IRentalService, RentalService>();
+            
 
             var app = builder.Build();
 
