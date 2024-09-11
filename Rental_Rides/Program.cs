@@ -32,8 +32,11 @@ namespace Rental_Rides
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            //Interface Services
             builder.Services.AddDbContext<CarRentalDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DbCon")));
             builder.Services.AddScoped<IReturnService, ReturnService>();
+            builder.Services.AddScoped<ICarService, CarService>();
+            builder.Services.AddScoped<IRentalService, RentalService>();
 
             var app = builder.Build();
 

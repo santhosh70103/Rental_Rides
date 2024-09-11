@@ -19,8 +19,8 @@ namespace Rental_Rides.Controllers
         [HttpPost("{rentalId}")]
         public async Task<IActionResult> ReturnCar(int rentalId)
         {
-            DateTime date = new DateTime(2024, 9, 16, 10, 30, 0); 
-            var result = await _returnService.ReturnCarAsync(rentalId, date);
+            
+            var result = await _returnService.ReturnCarAsync(rentalId, DateTime.Now);
 
             if (!result)
             {

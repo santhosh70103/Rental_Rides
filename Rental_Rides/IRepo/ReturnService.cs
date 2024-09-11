@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Rental_Rides.IRepo;
 using Rental_Rides.Models;
@@ -18,7 +19,12 @@ namespace Rental_Rides.Services
 
         public async Task<bool> ReturnCarAsync(int rentalId, DateTime actualReturnDate)
         {
-            
+            var returned_Car = await _context.Returned_Cars.FirstOrDefaultAsync(rc=> rc.Rental_Id == rentalId);
+
+            if(returned_Car != null )
+            {
+                return false;
+            }
             var rentedCar = await _context.Rented_Cars
                 .Include(rc => rc.Car_Details)
                 .FirstOrDefaultAsync(rc => rc.Rental_Id == rentalId);
