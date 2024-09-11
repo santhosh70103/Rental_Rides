@@ -1,0 +1,6 @@
+@Rentrides_hexa_HostAddress = http://localhost:5098
+
+GET {{Rentrides_hexa_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
