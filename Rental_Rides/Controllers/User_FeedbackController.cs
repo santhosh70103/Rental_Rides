@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Rent_Rides.Models;
+using Rental_Rides.DTO_Models;
 using Rental_Rides.Models;
 
 namespace Rental_Rides.Controllers
@@ -99,6 +101,36 @@ namespace Rental_Rides.Controllers
             return NoContent();
         }
 
+        [HttpPost("add")]
+        public async Task<ActionResult> AddFeedback( int rentalId,  userFeedbackDTO userFeedback)
+        {
+            if (rentalId <= 0)
+            {
+                return BadRequest("Invalid rental ID.");
+            }
+
+            var rented_car = await _context.Rented_Cars.FirstOrDefaultAsync(rc=>rc.Rental_Id==rentalId );
+            var car = await _context.Car_Details.FirstOrDefaultAsync(c=> c.Car_Id == rented_car.Car_Id);
+
+            if(rented_car ==null ||  car == null)
+            {
+                return BadRequest("Car or Rent Not found");
+            }
+
+            var NewFeedback = new User_Feedback
+            {
+                Customer_Id=rented_car.Customer_ID,
+                Car_Id=rented_car.Car_Id,
+                Feedback_Point=userFeedback.Points,
+                Feedback_Query=userFeedback.Query
+
+            };
+
+            _context.User_Feedbacks.Add(NewFeedback);
+            await _context.SaveChangesAsync();
+
+            return Ok("Feedback submitted successfully.");
+        }
         private bool User_FeedbackExists(int id)
         {
             return _context.User_Feedbacks.Any(e => e.Feedback_Id == id);

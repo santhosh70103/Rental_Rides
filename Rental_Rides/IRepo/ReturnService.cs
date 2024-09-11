@@ -17,23 +17,26 @@ namespace Rental_Rides.Services
             _context = context;
         }
 
-        public async Task<bool> ReturnCarAsync(int rentalId, DateTime actualReturnDate)
+        public async Task<bool> ReturnCarAsync(string email, DateTime actualReturnDate)
         {
-            var returned_Car = await _context.Returned_Cars.FirstOrDefaultAsync(rc=> rc.Rental_Id == rentalId);
+            var customer = await _context.Customers.FirstOrDefaultAsync(c => c.Customer_Email == email);
 
-            if(returned_Car != null )
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Customer_ID == customer.Customer_Id && o.Order_Status==2);
+            var rentedCar = await _context.Rented_Cars.FirstOrDefaultAsync(rc=> rc.Rental_Id == order.Rental_Id);
+
+            if (customer == null)
             {
                 return false;
             }
-            var rentedCar = await _context.Rented_Cars
-                .Include(rc => rc.Car_Details)
-                .FirstOrDefaultAsync(rc => rc.Rental_Id == rentalId);
-
-            if (rentedCar == null)
+            if (order == null)
             {
-                return false; // Car not found
+                return false;
             }
-            
+            if (rentedCar == null  )
+            {
+                return false;
+            }
+
             // Calculate penalty if actual return date is later than expected return date
             decimal penaltyAmount = 0;
             if (actualReturnDate > rentedCar.Expected_Return_Date)
@@ -45,7 +48,7 @@ namespace Rental_Rides.Services
 
             var payment = new Payment
             {
-                Rental_Id = rentalId,
+                Rental_Id = rentedCar.Rental_Id,
                 Payment_Type = "Penalty",
                 Total_Amount = penaltyAmount,
                 Payment_Status = "1" // or "Completed" based on your logic
@@ -58,26 +61,24 @@ namespace Rental_Rides.Services
             }
            
             // Update the Rented_Car table
-            if (penaltyAmount > 0 && payment.Payment_Status == "1")
+            if (penaltyAmount > 0 && payment.Payment_Status != "1")
 
             {
                 rentedCar.Status = 3;//pending
+                order.Order_Status = 3;
             }
             else 
             {
                 rentedCar.Status = 4;//Completed
+                order.Order_Status = 4;
             }
             // Car returned
             _context.Rented_Cars.Update(rentedCar);
 
-            var OrderDet = await _context.Orders.FirstOrDefaultAsync(o => o.Rental_Id == rentalId);
-            OrderDet.Order_Status = 4;
-
-
             // Create and add a Returned_Car record
             var returnedCar = new Returned_Car
             {
-                Rental_Id = rentalId,
+                Rental_Id = rentedCar.Rental_Id,
                 Actual_Return_Date = actualReturnDate,
                 Difference_In_Days = penaltyAmount > 0 ? (actualReturnDate - rentedCar.Expected_Return_Date.Value).Days : (int?)null,
                 Penalty = penaltyAmount

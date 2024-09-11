@@ -16,7 +16,7 @@ namespace Rental_Rides.IRepo
         {
 
             var customerIsExist = await _context.Customers.FirstOrDefaultAsync(c => c.Customer_Id == customerId);
-            var count = await _context.Rented_Cars.Where(r => r.Customer_ID == customerId && r.Status==1).CountAsync();
+            var count = await _context.Rented_Cars.Where(r => r.Customer_ID == customerId && r.Status!=5).CountAsync();
 
             if(date>=DateTime.Now.AddDays(3))
             {

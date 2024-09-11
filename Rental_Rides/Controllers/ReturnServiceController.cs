@@ -16,11 +16,11 @@ namespace Rental_Rides.Controllers
             _returnService = returnService;
         }
 
-        [HttpPost("{rentalId}")]
-        public async Task<IActionResult> ReturnCar(int rentalId)
+        [HttpPost]
+        public async Task<IActionResult> ReturnCar(string email)
         {
             
-            var result = await _returnService.ReturnCarAsync(rentalId, DateTime.Now);
+            var result = await _returnService.ReturnCarAsync(email, DateTime.Now);
 
             if (!result)
             {
