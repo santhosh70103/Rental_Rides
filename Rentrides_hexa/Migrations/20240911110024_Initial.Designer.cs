@@ -12,7 +12,7 @@ using Rentrides_hexa.Model;
 namespace Rentrides_hexa.Migrations
 {
     [DbContext(typeof(CarRentalDbContext))]
-    [Migration("20240910170345_Initial")]
+    [Migration("20240911110024_Initial")]
     partial class Initial
     {
         /// <inheritdoc />

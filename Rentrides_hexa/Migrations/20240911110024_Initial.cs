@@ -97,7 +97,7 @@ namespace Rentrides_hexa.Migrations
                         principalTable: "Customers",
                         principalColumn: "Customer_Id");
                 });
-                 
+
             migrationBuilder.CreateTable(
                 name: "User_Feedback",
                 columns: table => new
