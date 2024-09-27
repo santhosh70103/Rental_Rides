@@ -23,6 +23,17 @@ namespace Rental_Rides
                 options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
             });
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowReactApp",
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:5173")
+                               .AllowAnyMethod()
+                               .AllowAnyHeader();
+                    });
+            });
+
             builder.Services.AddScoped<IBookingService, BookingService>();
 
             builder.Services.AddControllers()
@@ -54,12 +65,12 @@ namespace Rental_Rides
                 options.RequireHttpsMetadata = false;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    //ValidIssuer = builder.Configuration["JwtSection:Issuer"],
-                    //ValidAudience = builder.Configuration["JwtSection:Audience"],
+                    ValidIssuer = builder.Configuration["JwtSection:Issuer"],
+                    ValidAudience = builder.Configuration["JwtSection:Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSection:Key"]!))
                 };
 
@@ -90,7 +101,7 @@ namespace Rental_Rides
 
             app.UseAuthorization();
 
-            
+            app.UseCors("AllowReactApp");
 
             app.MapControllers();
 

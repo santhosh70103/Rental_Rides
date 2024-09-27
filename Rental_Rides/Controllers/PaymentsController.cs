@@ -13,47 +13,47 @@ namespace Rental_Rides.Controllers
     //[Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
-    public class OrdersController : ControllerBase
+    public class PaymentsController : ControllerBase
     {
         private readonly CarRentalDbContext _context;
 
-        public OrdersController(CarRentalDbContext context)
+        public PaymentsController(CarRentalDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Orders
+        // GET: api/Payments
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
+        public async Task<ActionResult<IEnumerable<Payment>>> GetPayments()
         {
-            return await _context.Orders.ToListAsync();
+            return await _context.Payments.ToListAsync();
         }
 
-        // GET: api/Orders/5
+        // GET: api/Payments/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> GetOrder(int id)
+        public async Task<ActionResult<Payment>> GetPayment(int id)
         {
-            var order = await _context.Orders.FindAsync(id);
+            var payment = await _context.Payments.FindAsync(id);
 
-            if (order == null)
+            if (payment == null)
             {
                 return NotFound();
             }
 
-            return order;
+            return payment;
         }
 
-        // PUT: api/Orders/5
+        // PUT: api/Payments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutOrder(int id, Order order)
+        public async Task<IActionResult> PutPayment(int id, Payment payment)
         {
-            if (id != order.Order_Id)
+            if (id != payment.Payment_Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(order).State = EntityState.Modified;
+            _context.Entry(payment).State = EntityState.Modified;
 
             try
             {
@@ -61,7 +61,7 @@ namespace Rental_Rides.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!OrderExists(id))
+                if (!PaymentExists(id))
                 {
                     return NotFound();
                 }
@@ -74,36 +74,36 @@ namespace Rental_Rides.Controllers
             return NoContent();
         }
 
-        // POST: api/Orders
+        // POST: api/Payments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Order>> PostOrder(Order order)
+        public async Task<ActionResult<Payment>> PostPayment(Payment payment)
         {
-            _context.Orders.Add(order);
+            _context.Payments.Add(payment);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetOrder", new { id = order.Order_Id }, order);
+            return CreatedAtAction("GetPayment", new { id = payment.Payment_Id }, payment);
         }
 
-        // DELETE: api/Orders/5
+        // DELETE: api/Payments/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteOrder(int id)
+        public async Task<IActionResult> DeletePayment(int id)
         {
-            var order = await _context.Orders.FindAsync(id);
-            if (order == null)
+            var payment = await _context.Payments.FindAsync(id);
+            if (payment == null)
             {
                 return NotFound();
             }
 
-            _context.Orders.Remove(order);
+            _context.Payments.Remove(payment);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool OrderExists(int id)
+        private bool PaymentExists(int id)
         {
-            return _context.Orders.Any(e => e.Order_Id == id);
+            return _context.Payments.Any(e => e.Payment_Id == id);
         }
     }
 }

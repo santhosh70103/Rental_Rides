@@ -5,10 +5,12 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Rental_Rides.DTO_Models;
 using Rental_Rides.Models;
 
 namespace Rental_Rides.Controllers
@@ -20,12 +22,15 @@ namespace Rental_Rides.Controllers
         private readonly CarRentalDbContext _context;
         private readonly IConfiguration _config;
 
-        public AdminsController(CarRentalDbContext context)
+        public AdminsController(CarRentalDbContext context,IConfiguration configuration)
         {
             _context = context;
+            _config = configuration;
         }
 
         // GET: api/Admins
+
+        //[Authorize(Roles ="Admin")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Admin>>> GetAdmins()
         {
@@ -33,6 +38,7 @@ namespace Rental_Rides.Controllers
         }
 
         // GET: api/Admins/5
+        //[Authorize("Admin")]
         [HttpGet("{id}")]
         public async Task<ActionResult<Admin>> GetAdmin(int id)
         {
@@ -48,13 +54,11 @@ namespace Rental_Rides.Controllers
 
         // PUT: api/Admins/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutAdmin(int id, Admin admin)
+        
+        [HttpPut]
+        [Route("UpdateById")]
+        public async Task<IActionResult> PutAdmin(Admin admin)
         {
-            if (id != admin.Admin_ID)
-            {
-                return BadRequest();
-            }
 
             var existingAdmin = await _context.Admins
                                      .FirstOrDefaultAsync(a => a.Admin_Email == admin.Admin_Email);
@@ -72,7 +76,7 @@ namespace Rental_Rides.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!AdminExists(id))
+                if (!AdminExists(admin.Admin_ID))
                 {
                     return NotFound();
                 }
@@ -82,12 +86,14 @@ namespace Rental_Rides.Controllers
                 }
             }
 
-            return NoContent();
+            return StatusCode(200,new GeneralResponse { flag=true,Message="Succesffully Updated",token="",Id=0});
         }
 
         // POST: api/Admins
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Route("AdminReg")]
+        
         public async Task<ActionResult<Admin>> PostAdmin(Admin admin)
         {
             var existingAdmin = await _context.Admins
@@ -106,6 +112,7 @@ namespace Rental_Rides.Controllers
 
         // DELETE: api/Admins/5
         [HttpDelete("{id}")]
+        
         public async Task<IActionResult> DeleteAdmin(int id)
         {
             var admin = await _context.Admins.FindAsync(id);
@@ -127,21 +134,21 @@ namespace Rental_Rides.Controllers
 
         [HttpPost]
         [Route("AdminLogin")]
-        public async Task<IActionResult> LoginValidation(string Admin_Mail, string Password)
+        public async Task<IActionResult> LoginValidation(AdminDTO adminDTO)
         {
-            var Admin = await _context.Admins.FirstOrDefaultAsync(a => a.Admin_Email == Admin_Mail);
+            var Admin = await _context.Admins.FirstOrDefaultAsync(a => a.Admin_Email == adminDTO.Email);
             if (Admin == null)
             {
-                return NotFound("Customer Not Found");
+                return StatusCode(200, new GeneralResponse { flag = false, Message = "Login UnSuccessfull", token = "",Id=0 });
             }
-            if (Password != Admin.Admin_Password)
+            if (adminDTO.Password != Admin.Admin_Password)
             {
-                return BadRequest("Password Wrong");
+                return StatusCode(200, new GeneralResponse { flag = false, Message = "Login UnSuccessfull", token = "" ,Id=0});
             }
             string Token = GenerateJwtToken(Admin, Admin.Role);
-            return StatusCode(200, "Login Successfull" + " " + Token);
+            return StatusCode(200, new GeneralResponse { flag=true,Message="Login Successfull ",token=Token,Id=Admin.Admin_ID} );
         }
-
+            
         private string GenerateJwtToken(Admin user, string Role)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSection:Key"]));
@@ -153,7 +160,6 @@ namespace Rental_Rides.Controllers
                 new Claim(ClaimTypes.Name,user.Admin_Name),
                 new Claim(ClaimTypes.Role, Role)
             };
-
 
 
             var jwtToken = new JwtSecurityToken(

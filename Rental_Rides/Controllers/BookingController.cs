@@ -20,6 +20,7 @@ namespace Rent_Rides.Controllers
         // POST api/booking
         
         [HttpPost]
+        //[Authorize(Roles ="Customer")]
         public async Task<IActionResult> BookCar([FromBody] BookingRequestDto bookingRequest)
         {
             if (bookingRequest == null)
@@ -58,6 +59,7 @@ namespace Rent_Rides.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
 
         [HttpPost("Cancel/{orderId}")]
         public async Task<IActionResult> CancelOrder(int orderId)

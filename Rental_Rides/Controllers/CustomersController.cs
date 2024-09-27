@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ using Rental_Rides.Models;
 
 namespace Rental_Rides.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
     public class CustomersController : ControllerBase

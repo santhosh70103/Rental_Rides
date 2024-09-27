@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Rental_Rides.DTO_Models;
 using Rental_Rides.IRepo;
 using System.Threading.Tasks;
@@ -18,6 +19,7 @@ namespace Rental_Rides.Controllers
 
         // GET: api/Rental/5
         [HttpGet("{OrderID}")]
+
         public async Task<ActionResult<RentalDetailsDTO>> GetRentalDetails(int OrderID)
         {
             var rentalDetails = await _rentalService.GetRentalDetailsByRentalIdAsync(OrderID);
@@ -30,6 +32,7 @@ namespace Rental_Rides.Controllers
             return Ok(rentalDetails);
         }
 
+        //[Authorize(Roles ="Customer")]
         [HttpPost("rent")]
         public async Task<ActionResult> RentCar([FromQuery] string email)
         {

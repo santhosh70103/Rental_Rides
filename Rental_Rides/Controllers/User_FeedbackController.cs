@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using Rental_Rides.Models;
 
 namespace Rental_Rides.Controllers
 {
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class User_FeedbackController : ControllerBase
@@ -23,13 +25,16 @@ namespace Rental_Rides.Controllers
         }
 
         // GET: api/User_Feedback
+        //[Authorize(Roles = "Admin")]
         [HttpGet]
+        
         public async Task<ActionResult<IEnumerable<User_Feedback>>> GetUser_Feedbacks()
         {
             return await _context.User_Feedbacks.ToListAsync();
         }
 
         // GET: api/User_Feedback/5
+        //[Authorize(Roles = "Admin")]
         [HttpGet("{id}")]
         public async Task<ActionResult<User_Feedback>> GetUser_Feedback(int id)
         {
@@ -45,6 +50,7 @@ namespace Rental_Rides.Controllers
 
         // PUT: api/User_Feedback/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser_Feedback(int id, User_Feedback user_Feedback)
         {
@@ -76,7 +82,9 @@ namespace Rental_Rides.Controllers
 
         // POST: api/User_Feedback
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[Authorize(Roles = "Admin")]
         [HttpPost]
+        
         public async Task<ActionResult<User_Feedback>> PostUser_Feedback(User_Feedback user_Feedback)
         {
             _context.User_Feedbacks.Add(user_Feedback);
@@ -86,6 +94,8 @@ namespace Rental_Rides.Controllers
         }
 
         // DELETE: api/User_Feedback/5
+        //[Authorize(Roles = "Admin")]
+       
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser_Feedback(int id)
         {
@@ -102,6 +112,7 @@ namespace Rental_Rides.Controllers
         }
 
         [HttpPost("add")]
+        //[Authorize(Roles = "Customer")]
         public async Task<ActionResult> AddFeedback( int rentalId,  userFeedbackDTO userFeedback)
         {
             if (rentalId <= 0)
