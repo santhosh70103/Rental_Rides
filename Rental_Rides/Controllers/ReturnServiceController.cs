@@ -18,11 +18,11 @@ namespace Rental_Rides.Controllers
         }
 
         //[Authorize(Roles ="Customer")]
-        [HttpPost]
-        public async Task<IActionResult> ReturnCar(string email)
+        [HttpPost("ReturnCar/{email}/{orderId}")]
+        public async Task<IActionResult> ReturnCar(string email,int orderId)
         {
             
-            int result = await _returnService.ReturnCarAsync(email, DateTime.Now);
+            int result = await _returnService.ReturnCarAsync(email,orderId, DateTime.Now);
 
             if (result==100)
             {
@@ -40,7 +40,6 @@ namespace Rental_Rides.Controllers
             {
                 return StatusCode(500, "Internal Exception");
             }
-
             
         }
     }

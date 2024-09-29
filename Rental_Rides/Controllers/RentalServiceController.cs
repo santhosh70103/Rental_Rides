@@ -33,8 +33,8 @@ namespace Rental_Rides.Controllers
         }
 
         //[Authorize(Roles ="Customer")]
-        [HttpPost("rent")]
-        public async Task<ActionResult> RentCar([FromQuery] string email)
+        [HttpPost("rent/{email}")]
+        public async Task<ActionResult> RentCar(string email)
         {
             int result = await _rentalService.RentCarAsync(email);
             if(result == 100)
