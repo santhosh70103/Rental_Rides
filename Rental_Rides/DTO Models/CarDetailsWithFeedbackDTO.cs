@@ -10,6 +10,7 @@ namespace Rent_Rides.Models
         public string Fuel_Type { get; set; }
         public string Transmission_Type { get; set; }
         public decimal? Price_Per_Day { get; set; }
+        public string Car_Image { get; set; }
         public int? Number_Of_Seats { get; set; }
         public IEnumerable<UserFeedbackDTO> Feedback { get; set; }
     }

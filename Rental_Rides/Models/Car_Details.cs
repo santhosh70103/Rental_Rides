@@ -26,9 +26,9 @@ public class Car_Details
     public int? Car_Model_Year { get; set; }
     [Column(TypeName = "decimal(10,2)")]
     public decimal? Rental_Price_PerHour { get; set; }
-
+    
     [Required]
-    [StringLength(100)]
+    [StringLength(255)]
     public string? Car_Image { get; set; }
 
     [Column(TypeName = "decimal(10,2)")]

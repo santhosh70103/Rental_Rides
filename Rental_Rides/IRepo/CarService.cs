@@ -60,6 +60,7 @@ namespace Rental_Rides.Services
                     Fuel_Type = c.Fuel_Type,
                     Transmission_Type = c.Transmission_type,
                     Price_Per_Day = c.Rental_Price_PerDay,
+                    Car_Image=c.Car_Image,
                     Number_Of_Seats = c.No_of_seats,
                     Feedback = _context.User_Feedbacks
                         .Where(f => f.Car_Id == c.Car_Id)

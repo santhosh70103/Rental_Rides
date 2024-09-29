@@ -16,14 +16,14 @@ namespace Rental_Rides.Controllers
         }
 
 
-        [HttpGet("customer/{customerId}")]
-        public async Task<ActionResult> GetOrdersByCustomerId(int customerId)
+        [HttpGet("customer/{customerMail}")]
+        public async Task<ActionResult> GetOrdersByCustomerId(string customerMail)
         {
-            var groupedOrders = await _orderService.GetOrdersByCustomerIdAsync(customerId);
+            var groupedOrders = await _orderService.GetOrdersByEmailAsync(customerMail);
 
             if (groupedOrders == null || !groupedOrders.Any())
             {
-                return NotFound($"No orders found for Customer ID {customerId}");
+                return NotFound($"No orders found for Customer ID {customerMail}");
             }
 
             return Ok(groupedOrders);
