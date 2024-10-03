@@ -111,7 +111,7 @@ namespace Rental_Rides.Controllers
             return NoContent();
         }
 
-        [HttpPost("add")]
+        [HttpPost("add/{rentalId}")]
         //[Authorize(Roles = "Customer")]
         public async Task<ActionResult> AddFeedback( int rentalId,  userFeedbackDTO userFeedback)
         {
