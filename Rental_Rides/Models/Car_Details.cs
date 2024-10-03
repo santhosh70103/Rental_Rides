@@ -38,15 +38,15 @@ public class Car_Details
     public int? Available_Cars { get; set; }
 
     [StringLength(100)]
-    public string Available_Location { get; set; }
+    public string? Available_Location { get; set; }
 
     [StringLength(20)]
-    public string Fuel_Type { get; set; }
+    public string? Fuel_Type { get; set; }
 
     public int? No_of_seats { get; set; }
 
     [StringLength(20)]
-    public string Transmission_type { get; set; }
+    public string? Transmission_type { get; set; }
 
     [Column(TypeName = "decimal(10,2)")]
     public decimal? Penalty_Amt { get; set; }

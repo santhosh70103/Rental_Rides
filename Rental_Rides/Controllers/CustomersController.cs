@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
+using Rental_Rides.DTO_Models;
 using Rental_Rides.Models;
 
 namespace Rental_Rides.Controllers
@@ -132,19 +134,19 @@ namespace Rental_Rides.Controllers
 
         [HttpPost]
         [Route("CustomerLogin")]
-        public async Task<IActionResult> LoginValidation(string Customer_Mail, string Password)
+        public async Task<IActionResult> LoginValidation(LoginDto loginDto)
         {
-            var Customer = await _context.Customers.FirstOrDefaultAsync(c => c.Customer_Email == Customer_Mail);
+            var Customer = await _context.Customers.FirstOrDefaultAsync(c => c.Customer_Email == loginDto.Email );
             if (Customer == null)
             {
                 return NotFound("Customer Not Found");
             }
-            if (Password != Customer.Customer_Password)
+            if (loginDto.Password != Customer.Customer_Password)
             {
                 return BadRequest("Password Wrong");
             }
             string Token = GenerateJwtToken(Customer, Customer.Role);
-            return StatusCode(200, "Login Successfull" + " " + Token);
+            return StatusCode(200, new GeneralResponse { flag = true, Message = "Login Successfull ", token = Token, Id = Customer.Customer_Id });
         }
 
         private string GenerateJwtToken(Customers user, string Role)

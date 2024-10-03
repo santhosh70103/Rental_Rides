@@ -134,7 +134,7 @@ namespace Rental_Rides.Controllers
 
         [HttpPost]
         [Route("AdminLogin")]
-        public async Task<IActionResult> LoginValidation(AdminDTO adminDTO)
+        public async Task<IActionResult> LoginValidation(LoginDto adminDTO)
         {
             var Admin = await _context.Admins.FirstOrDefaultAsync(a => a.Admin_Email == adminDTO.Email);
             if (Admin == null)
