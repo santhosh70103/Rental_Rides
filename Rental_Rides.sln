@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35222.181
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rental_Rides", "Rental_Rides\Rental_Rides.csproj", "{31B16CFE-20C4-4029-97CC-56DDD91F55BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rental_Rides", "Rental_Rides\Rental_Rides.csproj", "{31B16CFE-20C4-4029-97CC-56DDD91F55BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentRides_Testing", "RentRides_Testing\RentRides_Testing.csproj", "{3916C661-0723-444E-9853-3891E52BBB9B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{31B16CFE-20C4-4029-97CC-56DDD91F55BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31B16CFE-20C4-4029-97CC-56DDD91F55BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31B16CFE-20C4-4029-97CC-56DDD91F55BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3916C661-0723-444E-9853-3891E52BBB9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3916C661-0723-444E-9853-3891E52BBB9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3916C661-0723-444E-9853-3891E52BBB9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3916C661-0723-444E-9853-3891E52BBB9B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
